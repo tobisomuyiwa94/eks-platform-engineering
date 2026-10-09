@@ -4,6 +4,7 @@ kind: Service
 
 metadata:
   name: platform-demo
+  namespace: platform-demo
   labels:
     app: platform-demo
 
