@@ -1,0 +1,52 @@
+
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: platform-demo
+  labels:
+    app: platform-demo
+
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: platform-demo
+
+  template:
+    metadata:
+      labels:
+        app: platform-demo
+
+    spec:
+      containers:
+        - name: platform-demo
+          image: platform-demo:1.0
+          imagePullPolicy: IfNotPresent
+
+          ports:
+            - name: http
+              containerPort: 8080
+
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "64Mi"
+            limits:
+              cpu: "500m"
+              memory: "128Mi"
+
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 3
+            periodSeconds: 5
+
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 10
