@@ -1,0 +1,11 @@
+
+apiVersion: v1
+kind: Namespace
+
+metadata:
+  name: platform-demo
+
+  labels:
+    app.kubernetes.io/part-of: platform-demo
+    environment: dev
+    managed-by: kubernetes
