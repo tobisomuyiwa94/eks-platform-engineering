@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}
+  labels:
+    app: {{ .Release.Name }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: platform-demo
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.containerPort }}
+          resources:
+            requests:
+              cpu: {{ .Values.resources.requests.cpu | quote }}
+              memory: {{ .Values.resources.requests.memory | quote }}
+            limits:
+              cpu: {{ .Values.resources.limits.cpu | quote }}
+              memory: {{ .Values.resources.limits.memory | quote }}
+          readinessProbe:
+            httpGet:
+              path: {{ .Values.healthCheck.path }}
+              port: http
+            initialDelaySeconds: 3
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: {{ .Values.healthCheck.path }}
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 10
